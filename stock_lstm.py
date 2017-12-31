@@ -85,11 +85,25 @@ if __name__ == "__main__":
     tb_cb = keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=1)
 
     # model.fit(x_train, y_train, nb_epoch=5000, batch_size=500, verbose=1)
-    model.fit(x_train, y_train, nb_epoch=5000, batch_size=500, verbose=1,
-              validation_data=(x_test, y_test), callbacks=[tb_cb])
+    history = model.fit(x_train, y_train, nb_epoch=5000, batch_size=500, verbose=1,
+                        validation_data=(x_test, y_test), callbacks=[tb_cb])
     # model.fit(x_train, y_train, nb_epoch=1000, batch_size=500, verbose=1,
     #          validation_data=(x_test, y_test), callbacks=[es_cb, tb_cb])
 
+    # モデルの保存
+    from keras.utils import plot_model
+    model_json = model.to_json()
+    with open("model.json", mode='w') as f:
+        f.write(model_json)
+    #  学習済みの重みの保存
+    model.save_weights("weight.hdf5")
+
+    #  学習履歴の保存
+    import pickle
+    with open("history.pickle", mode='wb') as f:
+        pickle.dump(history.history, f)
+
+    # 評価
     good = 0
     index = 0
     for values in x_test:
