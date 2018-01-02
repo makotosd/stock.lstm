@@ -83,10 +83,12 @@ if __name__ == "__main__":
     #  TensorFlowのTensorBoardに書き出す用のコールバックを生成
     # es_cb = keras.callbacks.EarlyStopping(monitor='val_loss', patience=1000, verbose=0, mode='auto')
     tb_cb = keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=1)
+    mc_cb = keras.callbacks.ModelCheckpoint('./weights.best.hdf5', monitor='val_acc', verbose=1, save_best_only=True,
+                                            mode='max')
 
     # model.fit(x_train, y_train, nb_epoch=5000, batch_size=500, verbose=1)
-    history = model.fit(x_train, y_train, nb_epoch=5000, batch_size=500, verbose=1,
-                        validation_data=(x_test, y_test), callbacks=[tb_cb])
+    history = model.fit(x_train, y_train, nb_epoch=1000, batch_size=500, verbose=0,
+                        validation_data=(x_test, y_test), callbacks=[tb_cb, mc_cb])
     # model.fit(x_train, y_train, nb_epoch=1000, batch_size=500, verbose=1,
     #          validation_data=(x_test, y_test), callbacks=[es_cb, tb_cb])
 
