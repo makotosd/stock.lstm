@@ -18,8 +18,8 @@ class StockCNN:
             X.append(data['open'].iloc[i:(i+n_prev)].as_matrix())              # X     = iloc[0:100]
             array = data.iloc[i:(i+n_prev)].as_matrix()                        # array = iloc[0:100]
             #if (float(array[-1]) > float(data.iloc[i+n_prev].as_matrix())):    # Y     = iloc[99] 比較 iloc[100]
-            if (float(data.iloc[i + n_prev].as_matrix()) > float(data.iloc[i + n_prev + 1].as_matrix())):  # Y     = iloc[99] 比較 iloc[100]
-            #if (float(data.iloc[i + n_prev + 1].as_matrix()) / float(data.iloc[i + n_prev].as_matrix()) < self.rise_rate ):  # Y     = iloc[99] 比較 iloc[100]
+            #if (float(data.iloc[i + n_prev].as_matrix()) > float(data.iloc[i + n_prev + 1].as_matrix())):  # Y     = iloc[99] 比較 iloc[100]
+            if (float(data.iloc[i + n_prev + 1].as_matrix()) / float(data.iloc[i + n_prev].as_matrix()) < self.rise_rate ):  # Y     = iloc[99] 比較 iloc[100]
                 Y.append([0])
             else:
                 Y.append([1])
