@@ -5,58 +5,16 @@
 
 import sys
 import os
-import numpy
+#  import numpy
 import pandas
 from sklearn import preprocessing
 
-from keras.models import Sequential
-from keras.layers import Convolution2D, MaxPooling2D
-from keras.layers import Activation, Dropout, Flatten, Dense
-from keras.utils import np_utils
 import keras
-
-
-#
-# モデルを生成
-#
-class StockCNN:
-    def __init__(self):
-        self.length_of_sequences = 100
-
-    def load_data(self, date, data, n_prev=100):
-        label = []
-        X, Y = [], []
-        for i in range(len(data) - n_prev):
-            label.append(date.iloc[i+n_prev].as_matrix())
-            X.append(data['close'].iloc[i:(i+n_prev)].as_matrix())
-            array = data.iloc[i:(i+n_prev)].as_matrix()
-            if (float(array[-1]) > float(data.iloc[i+n_prev].as_matrix())):
-                Y.append([0])
-            else:
-                Y.append([1])
-
-        ret_label = numpy.array(label)
-        retX = numpy.array(X)
-        retY = numpy.array(Y)
-        return ret_label, retX, retY
-
-    def create_model(self):
-        model = Sequential()
-        model.add(Dense(64, input_dim=self.length_of_sequences, activation='sigmoid'))
-        model.add(Dense(128, activation='sigmoid'))
-        model.add(Dense(64, activation='sigmoid'))
-        model.add(Dense(1, activation='sigmoid'))
-
-        model.compile(loss='binary_crossentropy',
-                      optimizer='rmsprop',
-                      metrics=['accuracy'])
-
-        return model
-
+import StockCNN
 
 if __name__ == "__main__":
 
-    stock = StockCNN()
+    stock = StockCNN.StockCNN()
     data = None
     for year in range(2007, 2018):
         data_ = pandas.read_csv('stocks_6702-T_1d_' + str(year) +  '.csv', encoding="shift-jis")
@@ -97,6 +55,8 @@ if __name__ == "__main__":
     model_json = model.to_json()
     with open("model.json", mode='w') as f:
         f.write(model_json)
+
+    '''''
     #  学習済みの重みの保存
     model.save_weights("weight.hdf5")
 
@@ -122,3 +82,4 @@ if __name__ == "__main__":
                 good += 1
         index += 1
     print("accuracy = {0:.2f}".format(float(good) / len(x_test)))
+    '''''
