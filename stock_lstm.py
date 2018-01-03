@@ -22,17 +22,17 @@ if __name__ == "__main__":
 
     data.columns = ['date', 'open', 'high', 'low', 'close', 'volume', 'value']
     data['date'] = pandas.to_datetime(data['date'], format='%Y-%m-%d')
-    data['close'] = preprocessing.scale(data['close'])
+    data['open'] = preprocessing.scale(data['open'])
     data = data.sort_values(by='date')
     data = data.reset_index(drop=True)
-    data = data.loc[:, ['date', 'close']]
+    data = data.loc[:, ['date', 'open']]
 
     # データ準備
     split_pos = int(len(data) * 0.9)
     x_label, x_train, y_train = stock.load_data(data[['date']].iloc[0:split_pos],
-                                                data[['close']].iloc[0:split_pos], stock.length_of_sequences)
+                                                data[['open']].iloc[0:split_pos], stock.length_of_sequences)
     x_tlabel, x_test,  y_test = stock.load_data(data[['date']].iloc[split_pos:],
-                                                data[['close']].iloc[split_pos:], stock.length_of_sequences)
+                                                data[['open']].iloc[split_pos:], stock.length_of_sequences)
 
     model = stock.create_model()
 

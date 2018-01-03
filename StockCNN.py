@@ -8,15 +8,18 @@ from keras.utils import np_utils
 class StockCNN:
     def __init__(self):
         self.length_of_sequences = 100
+        self.rise_rate = 1.02 # 2%以上
 
     def load_data(self, date, data, n_prev=100):
         label = []
         X, Y = [], []
-        for i in range(len(data) - n_prev):
-            label.append(date.iloc[i+n_prev].as_matrix())
-            X.append(data['close'].iloc[i:(i+n_prev)].as_matrix())
-            array = data.iloc[i:(i+n_prev)].as_matrix()
-            if (float(array[-1]) > float(data.iloc[i+n_prev].as_matrix())):
+        for i in range(len(data) - n_prev - 1):
+            label.append(date.iloc[i+n_prev].as_matrix())                      # label = iloc[100]
+            X.append(data['open'].iloc[i:(i+n_prev)].as_matrix())              # X     = iloc[0:100]
+            array = data.iloc[i:(i+n_prev)].as_matrix()                        # array = iloc[0:100]
+            #if (float(array[-1]) > float(data.iloc[i+n_prev].as_matrix())):    # Y     = iloc[99] 比較 iloc[100]
+            if (float(data.iloc[i + n_prev].as_matrix()) > float(data.iloc[i + n_prev + 1].as_matrix())):  # Y     = iloc[99] 比較 iloc[100]
+            #if (float(data.iloc[i + n_prev + 1].as_matrix()) / float(data.iloc[i + n_prev].as_matrix()) < self.rise_rate ):  # Y     = iloc[99] 比較 iloc[100]
                 Y.append([0])
             else:
                 Y.append([1])
