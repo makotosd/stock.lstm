@@ -30,7 +30,8 @@ if __name__ == "__main__":
     # データ準備
     split_pos = int(len(data) * 0.9)
     x_label, x_train, y_train = stock.load_data(data[['date']].iloc[0:split_pos],
-                                                data[['open']].iloc[0:split_pos], stock.length_of_sequences)
+                                                data[['open']].iloc[0:split_pos], stock.length_of_sequences,
+                                                use_smote = True)
     x_tlabel, x_test,  y_test = stock.load_data(data[['date']].iloc[split_pos:],
                                                 data[['open']].iloc[split_pos:], stock.length_of_sequences)
 
