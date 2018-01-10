@@ -47,7 +47,9 @@ class StockCNN:
         model = Sequential()
         model.add(Dense(64, input_dim=self.length_of_sequences, activation='sigmoid'))
         model.add(Dense(128, activation='sigmoid'))
+        model.add(Dropout(0.25))
         model.add(Dense(64, activation='sigmoid'))
+        model.add(Dropout(0.25))
         model.add(Dense(1, activation='sigmoid'))
 
         model.compile(loss='binary_crossentropy',
