@@ -53,11 +53,11 @@ if __name__ == "__main__":
     index = 0
     for values in x_test:
         y = y_test[index][0]
-        predict = model.predict(numpy.array([values]))[0][0]
+        predict = model.predict(numpy.array([values]))[0]
         print(x_tlabel[index][0], ',', y, ',', predict)
         #  print(y)
         #  print(predict)
-        if predict < 0.5:
+        if predict[0] < 0.5:
             if y == 0:
                 good += 1
         else:

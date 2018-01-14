@@ -6,6 +6,7 @@ from keras.layers import Activation, Dropout, Flatten, Dense
 from keras.utils import np_utils
 import random
 from imblearn.over_sampling import SMOTE
+from keras.utils import to_categorical
 
 class StockCNN:
     def __init__(self):
@@ -23,12 +24,16 @@ class StockCNN:
             #if (float(array[-1]) > float(data.iloc[i+n_prev].as_matrix())):    # Y     = iloc[99] 比較 iloc[100]
             #if (float(data.iloc[i + n_prev].as_matrix()) > float(data.iloc[i + n_prev + 1].as_matrix())):  # Y     = iloc[99] 比較 iloc[100]
             if (float(data.iloc[i + n_prev + 1].as_matrix()) / float(data.iloc[i + n_prev].as_matrix()) < self.rise_rate ):  # Y     = iloc[99] 比較 iloc[100]
-                Y.append([0])
+                # Y.append([0])
+                Y.append(0)
                 num_Y0 += 1
             else:
-                Y.append([1])
+                # Y.append([1])
+                Y.append(1)
                 num_Y1 += 1
 
+        Y_category = to_categorical(Y, num_classes=2)
+        Y = Y_category
         # SMOTEを使って、データのアンバランスを調整
         if use_smote == True:
             sm = SMOTE()
@@ -50,9 +55,9 @@ class StockCNN:
         model.add(Dropout(0.25))
         model.add(Dense(64, activation='sigmoid'))
         model.add(Dropout(0.25))
-        model.add(Dense(1, activation='sigmoid'))
+        model.add(Dense(2, activation='softmax'))
 
-        model.compile(loss='binary_crossentropy',
+        model.compile(loss='categorical_crossentropy',
                       optimizer='rmsprop',
                       metrics=['accuracy'])
 
