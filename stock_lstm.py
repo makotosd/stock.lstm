@@ -16,11 +16,15 @@ if __name__ == "__main__":
 
     stock = StockCNN.StockCNN()
     data = None
-    for year in range(2007, 2018):
-        data_ = pandas.read_csv('stocks_6702-T_1d_' + str(year) +  '.csv', encoding="shift-jis")
+    for year in range(2000, 2018):
+        data_ = pandas.read_csv('csv_cc/stocks_6702_1d_' + str(year) + '.csv', encoding="shift-jis")
         data = data_ if (data is None) else pandas.concat([data, data_])
 
-    data.columns = ['date', 'open', 'high', 'low', 'close', 'volume', 'value']
+    if len(data.columns) == 7:
+        data.columns = ['date', 'open', 'high', 'low', 'close', 'volume', 'value']
+    elif len(data.columns) == 6:
+        data.columns = ['date', 'open', 'high', 'low', 'close', 'volume']
+
     data['date'] = pandas.to_datetime(data['date'], format='%Y-%m-%d')
     data['open'] = preprocessing.scale(data['open'])
     data = data.sort_values(by='date')
@@ -42,8 +46,8 @@ if __name__ == "__main__":
     #  TensorFlowのTensorBoardに書き出す用のコールバックを生成
     # es_cb = keras.callbacks.EarlyStopping(monitor='val_loss', patience=1000, verbose=0, mode='auto')
     tb_cb = keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=1)
-    mc_cb = keras.callbacks.ModelCheckpoint('./weights.best.hdf5', monitor='val_acc', verbose=1, save_best_only=True,
-                                            mode='max')
+    mc_cb = keras.callbacks.ModelCheckpoint('./weights.best.hdf5', monitor='val_loss', verbose=1, save_best_only=True,
+                                            mode='min')
 
     # model.fit(x_train, y_train, nb_epoch=5000, batch_size=500, verbose=1)
     history = model.fit(x_train, y_train, nb_epoch=1000, batch_size=500, verbose=0,
