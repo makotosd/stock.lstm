@@ -20,6 +20,7 @@ for year in range(2000, 2009):
     dir = "./csv_day/" + str(year) + "/"
     print(dir)
     for file in os.listdir(dir):
+        date = None
         if fnmatch.fnmatch(file, '*.txt'):
             print("\t" + file)
             for line in open(dir + file, 'r', encoding='cp932'):         # 1çsï™
@@ -49,7 +50,7 @@ for year in range(2000, 2009):
     ccs_uniq.sort()
     for cc in ccs_uniq:
         print("CC: ", cc, ", Year: ", year)
-        filename = 'csv_cc/stocks_%s_1d_%s.csv' % (cc, year)
+        filename = './stock_cc_year/stocks_%s_1d_%s.csv' % (cc, year)
         data_cc = data[data.cc == cc]
         data_cc.to_csv(filename, index=False,
                        columns=['date', 'open', 'high', 'low', 'close', 'volume'],
