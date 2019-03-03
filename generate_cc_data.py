@@ -3,14 +3,15 @@
 import os  # osモジュールのインポート
 import fnmatch
 import re
-import pandas
+import pandas as pd
 
-regex = r'^20[0-9]+$'
+regex = r'^20[0-9]+\s*$'
 
 #
 #
 #
 data = None
+datedict = {}
 
 # os.listdir('パス')
 # 指定したパス内の全てのファイルとディレクトリを要素とするリストを返す
@@ -26,6 +27,11 @@ for year in range(2000, 2009):
             for line in open(dir + file, 'r', encoding='cp932'):         # 1行分
                 if re.match(regex, line):
                     date = line.rstrip()                # 改行の削除
+                    # print(date, "<<<<")
+                    if date in datedict:
+                        print("duplicated: %s %s" % (date, datedict[date]))
+                    else:
+                        datedict[date] = file
                 else:
                     itemList = line[:-1].split('\t')    # タブ区切りを読む
                     itemList.insert(1, date)
@@ -35,7 +41,7 @@ for year in range(2000, 2009):
 
                     ccs.append(itemList[0])   # カンパニーコードを記録
 
-    data = pandas.DataFrame(items)
+    data = pd.DataFrame(items)
     if(len(data.columns) == 7):
         data.columns = ['cc', 'date', 'open', 'high', 'low', 'close', 'volume']
     elif(len(data.columns) == 8):
@@ -44,7 +50,7 @@ for year in range(2000, 2009):
     # print(data.columns)
     # print(data)
 
-    data['date'] = pandas.to_datetime(data['date'], format='%Y%m%d')   # 日付型に。
+    data['date'] = pd.to_datetime(data['date'], format='%Y%m%d')   # 日付型に。
 
     ccs_uniq = list(set(ccs))  # 記録しておいたカンパニーコードをUniqに
     ccs_uniq.sort()
