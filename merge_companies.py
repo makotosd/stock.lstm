@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf8
+# usage: python merge_companies.py code_a code_b ... code_z
+#    ex) python merge_companies.py 1330 6701 6702
 
 import sys
 import os
@@ -26,8 +28,6 @@ for cc in ccs:
                 ccdataset = pd.concat([ccdataset, readdata])
 
     ccdataset = ccdataset.sort_index()
-    zzz = pd.Series(ccdataset.index)
-    print(zzz[zzz.duplicated()])
 
     for i in ccdataset.columns:
         ccdataset.rename(columns={i: cc + "_" + i}, inplace=True)
@@ -35,8 +35,6 @@ for cc in ccs:
     if(len(dataset) == 0):
         dataset = ccdataset
     else:
-        print(ccdataset)
-        print(dataset)
-        dataset = pd.concat([dataset, ccdataset], axis=1, sort=False)
+        dataset = pd.concat([dataset, ccdataset], axis=1, sort=False, join='inner')
 
-#print(dataset)
+print(dataset)
